@@ -7,14 +7,14 @@ def main():
 	
 	layout = [
 		[sg.Text('貼上PGP/GPG字段,注意Enter換行!!!')],
-		[sg.Multiline(size=(700, 20), key='encrypted_gpg', right_click_menu=right_click_menu)],
+		[sg.Multiline(size=(100, 20), key='encrypted_gpg', right_click_menu=right_click_menu)],
 		[sg.Button('解密'), sg.Button('清除GPG'), sg.Text('密碼*'), sg.Input(key='decode_pass', password_char='*'), sg.Text('*解密內容會顯示於下方*')],
 		[sg.Text('輸入文字內容,複製已加密字串,並發報到你的任何平台!(小心公開你的密碼)\n注意輸入字源限制,例如Twitter有字數限額')],
-		[sg.Multiline(size=(700, 20), key='decrypted_txt', right_click_menu=right_click_menu)],
+		[sg.Multiline(size=(100, 20), key='decrypted_txt', right_click_menu=right_click_menu)],
 		[sg.Button('加密'), sg.Button('清除文字'), sg.Text('密碼*'), sg.Input(key='encode_pass', password_char='*')]
 	]
 
-	window = sg.Window(icon='C:\\Users\\user\\Development\\python\\MessageAPP\\win_icon.ico',  title='加密/解密 - Anonymous Asia訊息工具 ', layout=layout, size=(1000, 800))
+	window = sg.Window(icon='C:\\Users\\user\\Development\\python\\MessageAPP\\win_icon.ico',  title='加密/解密 - Anonymous Asia訊息工具 ', layout=layout)
 	while True:
 		events, values = window.read()
 		if events == WINDOW_CLOSED:
