@@ -1,3 +1,6 @@
+<a href="https://github.com/constantinedev/GPGMsgCrypt/releases">DOWNLOAD</a>
+
+
 # GPGMsgCrypt
 Python Coding GUI Encrypt and Decrypt Tools<br>
 1. Support PyInstaller Exploit to every system<br>
