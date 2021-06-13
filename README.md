@@ -1,7 +1,10 @@
-<a href="https://github.com/constantinedev/GPGMsgCrypt/releases">DOWNLOAD</a>
-
-
 # GPGMsgCrypt
+
+============================
+<a href="https://github.com/constantinedev/GPGMsgCrypt/releases">DOWNLOAD</a>
+Windwos Linux OSX Support
+============================
+
 Python Coding GUI Encrypt and Decrypt Tools<br>
 1. Support PyInstaller Exploit to every system<br>
 2. using pgpy , PySimpleUGI and PyAutoGUI for only the codeing script<br>
