@@ -1,6 +1,6 @@
 # GPGMsgCrypt
 
-============================
+============================<br>
 <a href="https://github.com/constantinedev/GPGMsgCrypt/releases">DOWNLOAD</a><br>
 Windwos Linux OSX Support
 ============================
