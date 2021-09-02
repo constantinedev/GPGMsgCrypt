@@ -1,71 +1,80 @@
-import pgpy, pyautogui
-import PySimpleGUI as sg
-from PySimpleGUI.PySimpleGUI import WINDOW_CLOSED
+import pgpy
+import PySimpleGUIQt as sg
 	
 def main():
-	right_click_menu = ['MENU', ['---', '全選', '複製','貼上']]
-	
-	layout = [
-		[sg.Text('貼上PGP/GPG字段,注意Enter換行!!!')],
-		[sg.Multiline(size=(100, 20), key='encrypted_gpg', right_click_menu=right_click_menu)],
-		[sg.Button('解密'), sg.Button('清除GPG'), sg.Text('密碼*'), sg.Input(key='decode_pass', password_char='*'), sg.Text('*解密內容會顯示於下方*')],
-		[sg.Text('輸入文字內容,複製已加密字串,並發報到你的任何平台!(小心公開你的密碼)\n注意輸入字源限制,例如Twitter有字數限額')],
-		[sg.Multiline(size=(100, 20), key='decrypted_txt', right_click_menu=right_click_menu)],
-		[sg.Button('加密'), sg.Button('清除文字'), sg.Text('密碼*'), sg.Input(key='encode_pass', password_char='*')]
+	sg.theme('DefaultNoMoreNagging')
+
+	gpg_raw = [
+		[sg.Multiline(key='encrypted_gpg', size=(None, 150))],
+		[
+			sg.Button('解密', size=(8, 0.8)),
+			sg.Button('清除GPG', size=(8, 0.8)),
+			sg.Text('密碼*', size=(4, 0.8)),
+			sg.Input(key='decode_pass', size=(15, 0.8), password_char='*')
+		]
 	]
 
-	window = sg.Window(icon='C:\\Users\\user\\Development\\python\\MessageAPP\\win_icon.ico',  title='加密/解密 - Anonymous Asia訊息工具 ', layout=layout)
+	txt_raw = [
+		[sg.Multiline(key='decrypted_txt', size=(None, 150))],
+		[
+			sg.Button('加密', size=(8, 0.8)),
+			sg.Button('清除文字', size=(8, 0.8)),
+			sg.Text('密碼*', size=(4, 0.8)),
+			sg.Input(key='encode_pass', size=(15, 0.8), password_char='*')
+		]
+	]
+	
+	layout = [
+		[sg.Frame('文字訊息', layout=txt_raw), sg.Frame('GPG/PGP訊息', layout=gpg_raw)]
+	]
+
+	window = sg.Window(title='加密/解密 - Anonymous Asia 訊息工具 ', icon='win_icon.ico', size=(500, 800), layout=layout)
 	while True:
 		events, values = window.read()
-		if events == WINDOW_CLOSED:
+		if events == sg.WINDOW_CLOSED:
 			break
 
+		decode_str = values['encrypted_gpg']
+		passh = values['decode_pass']
+		gpg_content = values['encrypted_gpg']
 		if events == '解密':
-			decode_str = values['encrypted_gpg']
-			passh = values['decode_pass']
-			if passh == '' or passh == None:
-				sg.popup('未輸入密碼!')
+			if gpg_content == '' or gpg_content is None:
+				sg.popup_error('警告', '未輸入GPG訊息!', background_color='yellow', keep_on_top=True)
+			elif passh == '' or passh is None:
+				sg.popup_error('警告', '未輸入密碼!', background_color='yellow', keep_on_top=True)
 			else:
 				dec = pgpy.PGPMessage.from_blob(decode_str)
 				try:
 					decrypt = dec.decrypt(passh)
-					result = decrypt.message
-					try:
-						bys = str(result, encoding='utf-8')
-						window['decrypted_txt'].update(bys)
-					except:
-						window['decrypted_txt'].update(result)
+					window['decrypted_txt'].update(decrypt.message)
 				except pgpy.errors.PGPDecryptionError:
-					sg.popup('密碼錯誤!')
+					sg.popup_error('警告', '密碼錯誤!', background_color='yellow', keep_on_top=True)
 
+		encod_str = values['decrypted_txt']
+		passh = values['encode_pass']
+		text_content = values['decrypted_txt']
 		if events == '加密':
-			encod_str = values['decrypted_txt']
-			passh = values['encode_pass']			
-			if passh == '' or passh == None:
-				sg.popup('密碼不能為空! 請輸入下方密碼')
+			if text_content == '' or text_content is None:
+				sg.popup_error('警告', '未輸入訊息內容!', background_color='yellow', keep_on_top=True)
+			elif passh == '' or passh is None:
+				sg.popup_error('警告', '密碼不能為空! 請輸入下方密碼', background_color='yellow', keep_on_top=True)
 			else:
-				enc = pgpy.PGPMessage.new(encod_str, encoding='utf-8')
+				enc = pgpy.PGPMessage.new(str(encod_str))
 				try:
 					encode_result = enc.encrypt(passh)
 					window['encrypted_gpg'].update(encode_result)
 				except pgpy.errors.PGPEncryptionError:
-					sg.popup('加密出錯,可嘗試其他密碼。')
+					sg.popup_error('警告', '加密出錯,可嘗試其他密碼。', background_color='yellow', keep_on_top=True)
 			
 		if events == '清除文字':
 			window['decrypted_txt'].update('')
 			window['encode_pass'].update('')
+
 		if events == '清除GPG':
 			window['encrypted_gpg'].update('')
 			window['decode_pass'].update('')
-		if events == '全選':
-			pyautogui.hotkey('ctrl', 'a')
-		if events == '複製':
-			pyautogui.hotkey('ctrl', 'c')
-		if events == '貼上':
-			pyautogui.hotkey('ctrl', 'v')
-
+		
 	window.close()
 
-if __name__ == "__main__":
-	sg.theme('DefaultNoMoreNagging')
+if __name__ == "__main__":	
 	main()
