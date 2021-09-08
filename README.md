@@ -17,3 +17,4 @@ pyinstaller -wF UI.py --icon XXX.ico --name [GPGMsgCrypt] <--Name you can change
 <p>
 <img src='https://sun9-22.userapi.com/impf/-N2VErV1r88XPpDOVezVRJIH3IZiviqvTIJR3g/VhYT-YFWgEc.jpg?size=1916x1007&quality=96&proxy=1&sign=728ac1d25cfb4e6b666e7b2b9587d7a1&type=album' />
 </p>
+[Watch the tutorial video] https://www.youtube.com/embed/zd8RFhmuejE
