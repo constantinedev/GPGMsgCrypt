@@ -1,2 +1,3 @@
 pgpy
 PySimpleGUI
+pyinstaller==4.10
