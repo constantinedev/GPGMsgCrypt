@@ -3,7 +3,7 @@ import PySimpleGUIQt as sg
 	
 def main():
 	sg.theme('DefaultNoMoreNagging')
-	winIcon = 'path/to/win_icon.ico'
+	winIcon = '/home/t/Development/python/GPGMessageGen/win_icon.ico'
 
 	gpg_raw = [
 		[sg.Multiline(key='encrypted_gpg', size=(None, 150))],
@@ -35,42 +35,37 @@ def main():
 		if events == sg.WINDOW_CLOSED:
 			break
 
+		decode_str = values['encrypted_gpg']
+		passh = values['decode_pass']
+		gpg_content = values['encrypted_gpg']
 		if events == '解密':
-			decode_str = values['encrypted_gpg']
-			passh = values['decode_pass']
-			gpg_content = values['encrypted_gpg']
 			if gpg_content == '' or gpg_content is None:
-				sg.popup('未輸入GPG訊息!', title='警告', background_color='yellow', keep_on_top=True)
+				sg.popup('警告', '未輸入GPG訊息!', background_color='yellow', keep_on_top=True)
 			elif passh == '' or passh is None:
-				sg.popup('未輸入密碼!', title='警告', background_color='yellow', keep_on_top=True)
+				sg.popup('警告', '未輸入密碼!', background_color='yellow', keep_on_top=True)
 			else:
 				dec = PGPMessage.from_blob(decode_str)
 				try:
 					decrypt = dec.decrypt(passh)
-					decrypted_message = decrypt.message
-					try:
-						bys = str(decrypted_message, encoding='utf-8')
-						window['decrypted_txt'].update(bys)
-					except:
-						window['decrypted_txt'].update(decrypted_message)
+					window['decrypted_txt'].update(decrypt.message)
 				except errors.PGPDecryptionError:
-					sg.popup('密碼錯誤!', title='警告', background_color='yellow', keep_on_top=True)
+					sg.popup('警告', '密碼錯誤!', background_color='yellow', keep_on_top=True)
 
-
+		encod_str = values['decrypted_txt']
+		passh = values['encode_pass']
+		text_content = values['decrypted_txt']
 		if events == '加密':
-			encod_str = values['decrypted_txt']
-			passh = values['encode_pass']
-			if encod_str == '' or encod_str is None:
-				sg.popup('未輸入訊息內容!', title='警告', background_color='yellow', keep_on_top=True)
+			if text_content == '' or text_content is None:
+				sg.popup('警告', '未輸入訊息內容!', background_color='yellow', keep_on_top=True)
 			elif passh == '' or passh is None:
-				sg.popup('密碼不能為空! 請輸入下方密碼', title='警告', background_color='yellow', keep_on_top=True)
+				sg.popup('警告', '密碼不能為空! 請輸入下方密碼', background_color='yellow', keep_on_top=True)
 			else:
-				enc = PGPMessage.new(encod_str, encoding='utf-8')
+				enc = PGPMessage.new(str(encod_str))
 				try:
 					encode_result = enc.encrypt(passh)
 					window['encrypted_gpg'].update(encode_result)
 				except errors.PGPEncryptionError:
-					sg.popup('加密出錯,可嘗試其他密碼。', title='警告', background_color='yellow', keep_on_top=True)
+					sg.popup('警告', '加密出錯,可嘗試其他密碼。', background_color='yellow', keep_on_top=True)
 			
 		if events == '清除文字':
 			window['decrypted_txt'].update('')
