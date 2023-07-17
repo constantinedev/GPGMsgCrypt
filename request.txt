@@ -8,4 +8,4 @@ pynum
 numpy
 launchpadlib
 PySide2
-pyinstaller==4.3
+pyinstaller
